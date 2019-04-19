@@ -54,15 +54,30 @@ Output: monitor displays heatmap over image of their resume based on the importa
 
 ## Find your "dopelfamer" (famous dopelganger)
 
+Easy to build. Simple webapp for image similarity search here:
+
 [Image Similarity Web App](https://github.com/DeepCanopy/image-similarity)
 
-- training data:
-    - open source images of famous people faces
-- easy to build
-- demonstrates Manceps technologies
-    - high dimensional clustering
-    - high dimensional visualization
-    - graph topological data analysis (tda mapping)
+### Algorithm
+
+1. Find a pretrained facerecognition model, fallback to VGG16 if that fails
+2. Compile stock set of n images to compare against live data and take the highest score?
+3. Attendee takes picture with our webcam
+4. Compute unsupervised distance between the embedding of the attendee face picture and the embeddings of famous people pictures we have in the db
+5. If model from 1 doesn't give good results train a cv siamese network on different images of same people
+6. Visualize a 3D cloud of faces with [projector.tensorflow.org](projector.tensorflow.org). Animation of the face cloud could be playing in the background while user is taking their picture.
+7. Add attendee's name/face to the point cloud in 6 and let them explore around in the interactive map of famous people.
+
+### Data:
+
+- open source images of famous people faces
+- attendee face pictures from laptop web cam
+
+### Manceps technologies
+
+- high dimensional clustering
+- high dimensional visualization
+- graph topological data analysis (tda mapper)
 
 
 ## Other [TF Ideas](https://experiments.withgoogle.com/collection/ai)
