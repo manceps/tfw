@@ -39,7 +39,7 @@ Output: monitor displays heatmap over image of their resume based on the importa
 [companies](http://bl.ocks.org/mbostock/2706022)
 [les miserables characters](https://observablehq.com/@d3/force-directed-graph)
 
-- easy to build
+- easy to build interactive demo: [tf projector](http://projector.tensorflow.org/)
 - demonstrates Manceps technologies
     - high dimensional clustering
     - high dimensional visualization
