@@ -90,6 +90,13 @@ ENV/
 env.bak/
 venv.bak/
 
+# secrets and credentials
+.bash_env
+secret*
+credential*
+My\ Project*.json
+
+
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -102,3 +109,8 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+## data
+# *.json
+
+
