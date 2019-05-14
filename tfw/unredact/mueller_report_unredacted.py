@@ -1,4 +1,3 @@
-# flake8: noqa
 # -*- coding: utf-8 -*-
 """Mueller Report - UnRedacted.ipynb
 
