@@ -24,4 +24,4 @@ opencv-python
 pillow
 PyMuPDF==1.14.13
 pydrive
-
+python-chatbot
