@@ -2,7 +2,11 @@
 import os
 from pkg_resources import DistributionNotFound, get_distribution
 import glob
-from constants import PACKAGE_DIR
+
+try:
+    from .constants import SRC_DIR
+except: # noqa
+    SRC_DIR = 'tfw'
 
 try:
     dist_name = __name__
@@ -15,12 +19,12 @@ finally:
 
 if __version__ == 'unknown':
     try:
-        __version__ = open(os.path.join(PACKAGE_DIR, 'VERSION')).read().strip()
+        __version__ = open(os.path.join(SRC_DIR, 'VERSION')).read().strip()
     except:  # noqa
         pass
     finally:
         del os
-        del PACKAGE_DIR
+        del SRC_DIR
 
 modules = glob.glob(os.path.join(os.path.dirname(__file__), '*.py'))
 __all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f) and not f.endswith('__init__.py')]
