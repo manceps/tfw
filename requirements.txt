@@ -14,6 +14,14 @@
 # Example:
 # numpy==1.13.3
 # scipy==1.0
-
+cython
 django
+django_extensions
+google-cloud-vision
+jupyter
 -e git+https://github.com/totalgood/keras-bert.git@master#egg=keras_bert
+nltk
+numpy
+opencv-python
+pillow
+PyMuPDF==1.14.13
