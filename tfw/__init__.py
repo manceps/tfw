@@ -6,7 +6,8 @@ import glob
 try:
     from .constants import SRC_DIR
 except: # noqa
-    SRC_DIR = 'tfw'
+    SRC_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 try:
     dist_name = __name__
@@ -22,10 +23,15 @@ if __version__ == 'unknown':
         __version__ = open(os.path.join(SRC_DIR, 'VERSION')).read().strip()
     except:  # noqa
         pass
-    finally:
-        del os
-        del SRC_DIR
 
-modules = glob.glob(os.path.join(os.path.dirname(__file__), '*.py'))
-__all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f) and not f.endswith('__init__.py')]
+
+modules = {}
+for d in ('', 'unredact', 'chat', 'compare', 'djangoapp'):
+    modules[d] = list(glob.glob(os.path.join(SRC_DIR, d, '*.py')))
+print(modules)
+__all__ = ['.'.join(x for x in [d, os.path.basename(f)[:-3]] if x) for (d, fs) in modules.items() for f in fs if not f.endswith('__init__.py')]
+
+print(__all__)
 from . import *  # noqa
+del os, glob
+del SRC_DIR, modules, d
