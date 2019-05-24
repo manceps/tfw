@@ -129,4 +129,4 @@ if __name__ == '__main__':
 
     render_doc_text(detect_file=args.detect_file, out_file=args.out_file)
     # [END vision_document_text_tutorial_run_application]
-# [END vision_document_text_tutorial]
+    # [END vision_document_text_tutorial]

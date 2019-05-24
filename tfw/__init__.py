@@ -25,14 +25,12 @@ if __version__ == 'unknown':
         pass
 
 
-modules = {}
-for d in ('', 'unredact', 'compare'):  # , 'chat', 'djangoapp'): have to fix __init__.py for chat and djangoapp
-    modules[d] = list(glob.glob(os.path.join(SRC_DIR, d, '*.py')))
+modules = list(glob.glob(os.path.join(SRC_DIR, '*.py')))
 print(modules)
-__all__ = ['.'.join(x for x in [d, os.path.basename(f)[:-3]] if x) for (d, fs) in modules.items() for f in fs if not f.endswith('__init__.py')]
+__all__ = [os.path.basename(f)[:-3] for f in modules if not f.endswith('__init__.py')]
 
 print(__all__)
 
 from . import *  # noqa
 del os, glob
-del SRC_DIR, modules, d
+del SRC_DIR, modules
