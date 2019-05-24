@@ -1,0 +1,9 @@
+name: tfw
+channels:
+  - defaults
+dependencies:
+  - jupyter
+  - keras-gpu
+  - python=3.6
+  - tensorflow-gpu
+
