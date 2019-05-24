@@ -15,4 +15,14 @@
 # numpy==1.13.3
 # scipy==1.0
 
+cython
 django
+google-cloud-vision
+jupyter
+nltk
+numpy
+# fitz==0.0.2
+# -e git+https://github.com/totalgood/fitz.git@master#egg=fitz
+opencv-python
+pillow
+PyMuPDF==1.14.13
