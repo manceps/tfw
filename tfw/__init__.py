@@ -26,7 +26,7 @@ if __version__ == 'unknown':
 
 
 modules = {}
-for d in ('', 'unredact', 'chat', 'compare'):  # , 'djangoapp'): have to fix __init__.py for djangoapp
+for d in ('', 'unredact', 'compare'):  # , 'chat', 'djangoapp'): have to fix __init__.py for chat and djangoapp
     modules[d] = list(glob.glob(os.path.join(SRC_DIR, d, '*.py')))
 print(modules)
 __all__ = ['.'.join(x for x in [d, os.path.basename(f)[:-3]] if x) for (d, fs) in modules.items() for f in fs if not f.endswith('__init__.py')]
