@@ -30,7 +30,7 @@ from chatbot.contrib import (
     WikipediaFeature
 )
 
-from nlpia_bot import __version__
+# from tfw import __version__
 
 __author__ = "hobs"
 __copyright__ = "hobs"
