@@ -56,20 +56,13 @@ def get_dataframe(filename='train_5500.txt'):
     return df
 
 
-test_reviews = ["It was a decent movie, lots of ups and downs. Good thriller -- horrific, disturbing.",
-                "I didn't care for the unheroic Protagonist that chose to win the fight to avoid the melodramatic ending of curing his psychosis."]
-test_labels = [0, 1]
-
-
 def use_lambda(x):
     return use_encode(tf.squeeze(tf.cast(x, tf.string)), signature="default", as_dict=True)["default"]
 
 
-QA_DF = get_dataframe('train_5500.txt')
-QA_CATEGORIES = QA_DF.label.cat.categories.tolist()
-
-
-def normalize_trainset(df_train=QA_DF):
+def normalize_trainset(df_train='train_5500.txt'):
+    df_train = get_dataframe(df_train) if isinstance(df_train, str) else df_train
+    QA_CATEGORIES = df_train.label.cat.categories.tolist()
     # df_train = load_trec_trainset()
     # print(df_train.head())
     print(df_train.head())
@@ -78,9 +71,6 @@ def normalize_trainset(df_train=QA_DF):
     train_text = np.array(train_text, dtype=object)[:, np.newaxis]
     train_label = np.asarray(pd.get_dummies(df_train.label), dtype=np.int8)
     return train_text, train_label
-
-
-TRAIN_TEXTS, TRAIN_LABELS = normalize_trainset()
 
 
 def build_use_classifier(num_classes=7):
@@ -108,12 +98,7 @@ def train_model(model, train_texts=TRAIN_TEXTS, train_labels=TRAIN_LABELS, filen
     return history
 
 
-TEST_TEXTS = ["In what year did the titanic sink ?",
-              "What is the highest peak in California ?",
-              "Who invented the light bulb ?"]
-
-
-def test_model(model='model.h5', texts=TEST_TEXTS, categories=QA_CATEGORIES):
+def test_model(model='model.h5', texts=None, categories=None):
     texts = np.array(texts, dtype=object)[:, np.newaxis]
     with tf.Session() as session:
         K.set_session(session)
@@ -134,3 +119,19 @@ def test_model(model='model.h5', texts=TEST_TEXTS, categories=QA_CATEGORIES):
     df['text'] = [t[0] for t in texts]
     df['label'] = predicted_labels
     return df
+
+
+if __name__ == '__main__':
+    QA_DF = get_dataframe('train_5500.txt')
+    QA_CATEGORIES = QA_DF.label.cat.categories.tolist()
+    TEST_TEXTS = ["In what year did the titanic sink ?",
+                  "What is the highest peak in California ?",
+                  "Who invented the light bulb ?"]
+
+    TRAIN_TEXTS, TRAIN_LABELS = normalize_trainset()
+    test_reviews = ["It was a decent movie, lots of ups and downs. Good thriller -- horrific, disturbing.",
+                "I didn't care for the unheroic Protagonist that chose to win the fight to avoid the melodramatic ending of curing his psychosis."]
+    test_labels = [0, 1]
+
+    test_model(model='model.h5', texts=TEST_TEXTS, categories=QA_CATEGORIES):
+
