@@ -84,7 +84,7 @@ def build_use_classifier(num_classes=7):
     return model
 
 
-def train_model(model, train_texts=TRAIN_TEXTS, train_labels=TRAIN_LABELS, filename='model.h5'):
+def train_model(model, train_texts=None, train_labels=None, filename='model.h5'):
     with tf.Session() as session:
         K.set_session(session)
         session.run(tf.global_variables_initializer())
@@ -133,5 +133,10 @@ if __name__ == '__main__':
                 "I didn't care for the unheroic Protagonist that chose to win the fight to avoid the melodramatic ending of curing his psychosis."]
     test_labels = [0, 1]
 
-    test_model(model='model.h5', texts=TEST_TEXTS, categories=QA_CATEGORIES):
+    model = buile_use_classifier()
+
+    history = train_model(model, train_texts=TRAIN_TEXTS, train_labels=TRAIN_LABELS, filename='model.h5')
+
+    print(test_model(model='model.h5', texts=TEST_TEXTS, categories=QA_CATEGORIES))
+
 
