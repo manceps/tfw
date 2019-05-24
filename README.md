@@ -17,7 +17,7 @@ We built this on the shoulders of a lot of good people contributing code and dat
 - [Open Source Mueller Report](http://opensourcemuellerreport.com/)
 - [Ian Landis Miller](https://github.com/iandennismiller/mueller-report)
 - [Zhao HG's port of BERT to Keras](https://github.com/CyberZHG/keras-bert)
-- [Sepehr Sameni's port of BERT to Keras]https://github.com/Separius/BERT-keras
+- [Sepehr Sameni's port of BERT to Keras](https://github.com/Separius/BERT-keras)
 - [Gaden Buie's Latex port of the PDF report](https://github.com/totalgood/gadenbuie-mueller-report)
 - [Manuel Amunategui's RNN for Generating Mueller](http://www.viralml.com/video-content.html?v=_DexQhQB8uI&Title=Generate%20Robert%20Mueller%20with%20TF%202.0,%20Keras,%20GRU,%20TPU,%20For%20Free%20and%20Under%205%20Minutes)
 - [Paul Mooney's OCR of the PDF report](https://www.kaggle.com/paultimothymooney/mueller-report)
