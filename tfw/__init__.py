@@ -27,5 +27,7 @@ if __version__ == 'unknown':
         del SRC_DIR
 
 modules = glob.glob(os.path.join(os.path.dirname(__file__), '*.py'))
-__all__ = [os.path.basename(f)[:-3] for f in modules if os.path.isfile(f) and not f.endswith('__init__.py')]
+__all__ = ['.'.join(x for x in [d, os.path.basename(f)[:-3]] if x) for (d, fs) in modules.items() for f in fs if not f.endswith('__init__.py')]
+
+
 from . import *  # noqa

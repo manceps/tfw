@@ -61,9 +61,9 @@ To authenticate, the link generated will open in another page. Login with your G
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 import time
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import tensorflow as tf
 import numpy as np
@@ -111,7 +111,7 @@ Before training, we need to map strings to a numerical representation. Create tw
 """
 
 # Creating a mapping from unique characters to indices
-char2idx = {u:i for i, u in enumerate(vocab)}
+char2idx = {u: i for i, u in enumerate(vocab)}
 idx2char = np.array(vocab)
 
 text_as_int = np.array([char2idx[c] for c in text])
@@ -119,12 +119,12 @@ text_as_int = np.array([char2idx[c] for c in text])
 """Now we have an integer representation for each character. Notice that we mapped the character as indexes from 0 to `len(unique)`."""
 
 print('{')
-for char,_ in zip(char2idx, range(20)):
+for char, _ in zip(char2idx, range(20)):
     print('  {:4s}: {:3d},'.format(repr(char), char2idx[char]))
 print('  ...\n}')
 
 # Show how the first few characters from the text are mapped to integers
-print ('{} ---- characters mapped to int ---- > {}'.format(repr(text[123:151]), text_as_int[123:151]))
+print('{} ---- characters mapped to int ---- > {}'.format(repr(text[123:151]), text_as_int[123:151]))
 
 """### The prediction task
 
