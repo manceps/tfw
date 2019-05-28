@@ -1,0 +1,281 @@
+\documentclass[aspectratio=169]{beamer}
+
+\title{Customizing the Django Admin}
+\author{David Fischer}
+\date{May 23, 2019}
+
+%% Beamer Themes
+\usetheme{Berlin}
+\usecolortheme{dove}
+\usefonttheme{serif}
+
+%% Remove beamer controls
+\beamertemplatenavigationsymbolsempty
+
+%% Packages
+% Pygments must be accessible to use minted and --shell-escape
+%  must be used with pdflatex
+\usepackage{minted}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage[font=scriptsize,labelformat=empty]{caption}
+
+
+\setbeamertemplate{footline}{
+  \hspace*{.2cm}
+  \scriptsize{
+    \insertshorttitle
+    \hspace*{50pt}
+    \hfill
+    \insertframenumber/\inserttotalframenumber
+    \hspace*{.2cm}
+  }
+  \vspace{9pt}
+}
+
+
+\begin{document}
+
+\maketitle
+
+
+% Fragile is required for syntax highlighting
+\begin{frame}[fragile]
+\frametitle{Some models (trimmed for brevity)}
+
+\begin{multicols}{2}
+
+{\tiny
+\begin{minted}{python}
+## blog/models.py
+
+class Category(models.Model):
+    name = models.CharField(max_length=255)
+
+class Author(models.Model):
+    name = models.CharField(max_length=255)
+    status = models.CharField(
+        choices=(("staff", "Staff"), ("guest", "Guest")),
+        max_length=255,
+    )
+
+class Post(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField()
+    author = models.ForeignKey(
+      Author, 
+      on_delete=models.CASCADE,
+    )
+    categories = models.ManyToManyField(Category)
+    body = models.TextField()
+    publish_date = models.DateTimeField()
+\end{minted}
+} 
+
+\columnbreak
+
+{\tiny
+\begin{minted}{python}
+## blog/admin.py
+
+@admin.register(Author)
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ("name", "status")
+    list_editable = ("status",)
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = (
+      "title", 
+      "author", 
+      "post_categories", 
+      "publish_date",
+    )
+\end{minted}
+}
+
+\end{multicols}
+
+\end{frame}
+
+
+\begin{frame}
+  \begin{figure}[p]
+    \centering
+    \fbox{\includegraphics[width=0.8\paperwidth]{images/django-admin-blog.png}}
+  \end{figure}
+\end{frame}
+
+
+%% Filters
+\begin{frame}[fragile]
+\frametitle{Basic Filters}
+
+{\tiny
+\begin{minted}{python}
+## blog/admin.py
+
+class PostAdmin(admin.ModelAdmin):
+    # ...
+    list_filter = ("publish_date", "author")
+\end{minted}
+}
+
+\end{frame}
+
+%% More basic filters
+\begin{frame}
+  \begin{figure}[p]
+    \centering
+    \fbox{\includegraphics[width=0.8\paperwidth]{images/default-filters.png}}
+  \end{figure}
+\end{frame}
+
+
+%% More Advanced Filters
+\begin{frame}[fragile]
+\frametitle{Advanced \& Custom Filters}
+
+{\tiny
+\begin{minted}{python}
+## blog/admin.py
+
+class PostPublishDateFilter(admin.SimpleListFilter):
+    title = "publish date"
+    parameter_name = "publish"
+
+    def lookups(self, request, model_admin):
+        return [
+            ("unpublished", "Unpublished"),
+            ("recent", "Recently Published"),
+            ("old", "Old"),
+        ]
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == "unpublished":
+            return queryset.filter(publish_date=None)
+        if value == "recent":
+            return queryset.filter(publish_date__gt=timezone.now() - timedelta(days=30))
+        if value == "old":
+            return queryset.filter(publish_date__lt=timezone.now() - timedelta(days=365))
+        return queryset
+
+class PostAdmin(admin.ModelAdmin):
+    # ...
+    list_filter = (PostPublishDateFilter, "author")
+\end{minted}
+}
+\end{frame}
+
+%% More advanced filters
+\begin{frame}
+  \begin{figure}[p]
+    \centering
+    \fbox{\includegraphics[width=0.8\paperwidth]{images/custom-filter.png}}
+  \end{figure}
+\end{frame}
+
+
+%% Date Hierarchies
+\begin{frame}[fragile]
+\frametitle{Filtering and Grouping by a Date Field}
+
+{\tiny
+\begin{minted}{python}
+## blog/admin.py
+
+class PostAdmin(admin.ModelAdmin):
+    # ...
+    date_hierarchy = "publish_date"
+\end{minted}
+} 
+\end{frame}
+\begin{frame}
+\begin{figure}[p]
+  \centering
+  \fbox{\includegraphics[width=0.8\paperwidth]{images/date-hierarchy.png}}
+\end{figure}
+
+\end{frame}
+
+
+%% List Editable
+\begin{frame}[fragile]
+\frametitle{Editable Items in the List View}
+
+{\tiny
+\begin{minted}{python}
+## blog/admin.py
+
+class AuthorAdmin(admin.ModelAdmin):
+    # ...
+    list_editable = ("status",)
+\end{minted}
+} 
+\end{frame}
+\begin{frame}
+\begin{figure}[p]
+  \centering
+  \fbox{\includegraphics[width=0.8\paperwidth]{images/list-editable.png}}
+\end{figure}
+
+\end{frame}
+
+
+%% Search
+\begin{frame}[fragile]
+\frametitle{Search}
+
+{\tiny
+\begin{minted}{python}
+## blog/admin.py
+
+class PostAdmin(admin.ModelAdmin):
+    # ...
+    search_fields = ("title", "body")
+\end{minted}
+} 
+\end{frame}
+\begin{frame}
+\begin{figure}[p]
+  \centering
+  \fbox{\includegraphics[width=0.8\paperwidth]{images/search.png}}
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Resources}
+  \begin{itemize}
+    \item {\small Django Tutorial \#7 - \href{https://docs.djangoproject.com/en/2.2/intro/tutorial07/}{docs.djangoproject.com}}
+    \item {\small Django Admin Cookbook - \href{https://books.agiliq.com/projects/django-admin-cookbook}{books.agiliq.com}}
+    \item {\small \href{https://hakibenita.com/tag/django-admin}{hakibenita.com}}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Interested in more Django Admin talks?}
+  \begin{itemize}
+    \item {\small Optimizing the Django Admin for Performance}
+    \item {\small Securing the Django Admin}
+    \item {\small Django Admin Add-Ons \& Extensions}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{}
+  {\huge Questions or comments?}
+\end{frame}
+
+
+\end{document}

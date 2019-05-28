@@ -1,0 +1,9 @@
+flask
+-e git+https://github.com/totalgood/keras-bert.git@master#egg=keras_bert
+# nlpia==0.2.1
+numpy
+scipy
+keras
+tensorflow
+## gpu support used by Lawrence Neal
+# https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow-0.8.0rc0-cp27-none-linux_x86_64.whl
