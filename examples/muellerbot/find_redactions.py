@@ -47,10 +47,43 @@ def normalize_redaction_markers(lines, inplace=True):
     return lines
 
 
-if __name__ == '__main__':
+def clean_dataframe(filepath='mueller-report-with-redactions-marked.csv'):
+    df = pd.read_csv(filepath, header=1)
+    df.columns = 'page text appendix unnamed'.split()
+    return df
+
+
+def get_line_pairs(df, redaction_marker='[Harm to Ongoing Matter]',
+                   min_line_length=40, max_line_length=120):
+    line_context = get_line_context(
+        df=df, redaction_marker=redaction_marker,
+        min_line_length=min_line_length, max_line_length=min_line_length)
+    return [tuple(lc[:2]) for lc in line_context]
+
+
+def get_line_context(df, redaction_marker='[Harm to Ongoing Matter]',
+                     min_line_length=40, max_line_length=120):
+    line_pairs = []
+    for i, line in enumerate(df.text):
+        if redaction_marker in line:
+            prevline = df.text.iloc[i - 1]
+            nextline = df.text.iloc[i + 1] if (i < (len(df) - 1)) else ''
+            if (redaction_marker not in prevline and
+                    len(prevline) > min_line_length and
+                    len(prevline) < max_line_length):
+                line_pairs.append((prevline, line, nextline))
+    return line_pairs
+
+
+def main():
     if len(sys.argv) > 1:
         csv_filename = sys.argv[1]
     else:
-        csv_filename = '/midata/manceps/unredact/mueller-report.csv'
-    df = pd.read_csv(csv_filename, header=1)
-    lines = normalize_redaction_markers(df['text'])
+        csv_filename = 'mueller-report-with-redactions-marked.csv'
+    df = clean_dataframe(csv_filename)
+    line_pairs = get_line_pairs(df)
+    line_pairs = pd.DataFrame(line_pairs, columns='line1 line2'.split())
+    line_pairs.to_csv('mueller-report-redaction-linepairs.csv')
+    print(line_pairs.head())
+
+    # lines = normalize_redaction_markers(df['text'])
