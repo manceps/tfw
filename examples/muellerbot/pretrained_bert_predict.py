@@ -12,7 +12,7 @@ if len(sys.argv) == 2:
     UNZIPPED_MODEL_PATH = os.path.abspath(sys.argv[1])
 
 UNZIPPED_MODEL_PATH = (
-    UNZIPPED_MODEL_PATH or os.environ['UNZIPPED_MODEL_PATH'] or os.path.abspath(
+    UNZIPPED_MODEL_PATH or os.environ.get('UNZIPPED_MODEL_PATH') or os.path.abspath(
         '~/midata/public/models/bert/multi_cased_L-12_H-768_A-12'))
 
 
@@ -24,9 +24,9 @@ def load_model():
         print('DICT_PATH:       $UNZIPPED_MODEL_PATH/vocab.txt')
         sys.argv = [
             sys.argv[0],
-            os.environ.get('CONFIG_PATH', None) or os.path.join(os.environ['UNZIPPED_MODEL_PATH'], 'bert_config.json'),
-            os.environ.get('CHECKPOINT_PATH', None) or os.path.join(os.environ['UNZIPPED_MODEL_PATH'], 'bert_model.ckpt'),
-            os.environ.get('DICT_PATH', None) or os.path.join(os.environ['UNZIPPED_MODEL_PATH'], 'vocab.txt'),
+            os.environ.get('CONFIG_PATH') or os.path.join(os.environ['UNZIPPED_MODEL_PATH'], 'bert_config.json'),
+            os.environ.get('CHECKPOINT_PATH') or os.path.join(os.environ['UNZIPPED_MODEL_PATH'], 'bert_model.ckpt'),
+            os.environ.get('DICT_PATH') or os.path.join(os.environ['UNZIPPED_MODEL_PATH'], 'vocab.txt'),
         ]
 
     if not all([os.path.exists(p) for p in sys.argv[1:4]]):
