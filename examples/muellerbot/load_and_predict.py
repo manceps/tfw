@@ -77,6 +77,40 @@ tokenizer = Tokenizer(token_dict)
 # original keras-bert demo example in chinese translated to English:
 # text = text or 'Mathematics is a discipline that uses symbolic language to study concepts such as quantity, structure, change, and space.'
 
+
+def load_pipeline():
+    if len(sys.argv) != 4:
+        print('python load_model.py CONFIG_PATH CHECKPOINT_PATH DICT_PATH')
+        print('CONFIG_PATH:     $UNZIPPED_MODEL_PATH/bert_config.json')
+        print('CHECKPOINT_PATH: $UNZIPPED_MODEL_PATH/bert_model.ckpt')
+        print('DICT_PATH:       $UNZIPPED_MODEL_PATH/vocab.txt')
+        sys.argv = [
+            sys.argv[0],
+            os.path.abspath(os.environ.get('CONFIG_PATH') or os.path.join(UNZIPPED_MODEL_PATH, 'bert_config.json')),
+            os.path.abspath(os.environ.get('CHECKPOINT_PATH') or os.path.join(UNZIPPED_MODEL_PATH, 'bert_model.ckpt')),
+            os.path.abspath(os.environ.get('DICT_PATH') or os.path.join(UNZIPPED_MODEL_PATH, 'vocab.txt')),
+        ]
+
+    print(sys.argv)
+    if not all([os.path.exists(p) for p in sys.argv[1:4]]):
+        print("You must specify the path where you've downloaded the pretrained BERT model in $UNZIPPED_MODEL_PATH or on the commandline.")
+
+    config_path, checkpoint_path, dict_path = tuple(sys.argv[1:])
+
+    model = load_trained_model_from_checkpoint(config_path, checkpoint_path, training=True)
+    model.summary(line_length=140)
+
+    token_dict = {}
+    with codecs.open(dict_path, 'r', 'utf8') as reader:
+        for line in reader:
+            token = line.strip()
+            token_dict[token] = len(token_dict)
+    token_dict_rev = {v: k for k, v in token_dict.items()}
+    tokenizer = Tokenizer(token_dict)
+
+    return dict(model=model, token_dict=token_dict, token_dict_rev=token_dict_rev, tokenizer=tokenizer)
+
+
 sentences = [
     'The IRA later used social media accounts and interest groups to sow discord in the U.S. political system through what it termed "information warfare."',
     ('The campaign evolved from a generalized program designed in 2014 and 2015 to undermine the U.S. electoral system,' +
@@ -91,9 +125,7 @@ sentences = [
 predictions = []
 
 for i, text in enumerate(sentences):
-    print("Redacting the first two words, then trying to fill the blanks:")
-    if re.findall(r'^[-:.0-9 \t]{1,2}'):
-        continue
+    print("Redacting the first two words:")
     tokens = tokenizer.tokenize(text)
     tokens[1] = tokens[2] = '[MASK]'
     print('Tokens:', tokens)
@@ -114,6 +146,9 @@ for i, text in enumerate(sentences):
         break
 
 for i, (text, redacted) in enumerate(line_pairs):
+    # try to filter out footnotes, etc
+    if re.findall(r'^[-:.0-9 \t]{1,2}', text):
+        continue
     pass
 
 # sentence_1 = text
