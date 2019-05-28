@@ -70,13 +70,6 @@ token_dict_rev = {v: k for k, v in token_dict.items()}
 
 tokenizer = Tokenizer(token_dict)
 
-# original keras-bert demo example in chinese translated to English:
-# text = '数学是利用符号语言研究數量、结构、变化以及空间等概念的一門学科。'
-# text = 'Google is dedicated to proactive openness and applying machine learning technology to further the common good.'
-
-# original keras-bert demo example in chinese translated to English:
-# text = text or 'Mathematics is a discipline that uses symbolic language to study concepts such as quantity, structure, change, and space.'
-
 
 def load_pipeline(UNZIPPED_MODEL_PATH=UNZIPPED_MODEL_PATH):
     if len(sys.argv) != 4:
@@ -121,6 +114,7 @@ sentences = [
         ' with Trump supporters and Trump Campaign officials in the United States.'),
     ]
 
+# pipeline = load_pipeline()
 
 predictions = []
 redactions = [2, 3]
@@ -140,17 +134,19 @@ for i, text in enumerate(sentences):
 
     predicts = model.predict([indices, segments, masks])[0]
     predicts = np.argmax(predicts, axis=-1)
-    predictions_parameterized = list(map(lambda x: token_dict_rev[x],
-        [x for (j, x) in enumerate(predicts[0]) if j + 1 in redactions]))
+    predictions_parameterized = list(
+        map(lambda x: token_dict_rev[x],
+        [x for (j, x) in enumerate(predicts[0]) if j - 1 in redactions])
+        )
     predictions.append((predictions_parameterized, text))
     predictions_hardcoded = list(map(lambda x: token_dict_rev[x], predicts[0][3:5]))
-    print('Fill with: ', predcitions_hardcoded)
+    print('Fill with: ', predictions_hardcoded)
 
     print(f'New fill with: {predictions[-1][0]}')
     # list(map(lambda x: token_dict_rev[x], predicts[0][1:3]))
     print(f'Actual tokens: {predictions[-1][1][:80]}')
-    if len(predictions) > 10:
-        break
+    # if len(predictions) > 10:
+    #     break
 
 for i, (text, redacted) in enumerate(line_pairs):
     # try to filter out footnotes, etc
