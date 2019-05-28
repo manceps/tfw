@@ -125,7 +125,7 @@ sentences = [
 predictions = []
 redactions = [2, 3]
 for i, text in enumerate(sentences):
-    print("Redacting words {redactions}:")
+    print(f"Redacting words {redactions}:")
     tokens = tokenizer.tokenize(text)
     for r in redactions:
         tokens[r + 1] = '[MASK]'
@@ -141,8 +141,10 @@ for i, text in enumerate(sentences):
     predicts = model.predict([indices, segments, masks])[0]
     predicts = np.argmax(predicts, axis=-1)
     predictions.append((' '.join(list(map(lambda x: token_dict_rev[x],
-        predicts[0][1:3]))), text))
-    print(f'Fill with: {predictions[-1][0]}')
+        [x for (j, x) in enumerate(predicts[0]) if j + 1 in redactions]))), text))
+    print('Fill with: ', list(map(lambda x: token_dict_rev[x], predicts[0][3:5])))
+
+    print(f'New fill with: {predictions[-1][0]}')
     # list(map(lambda x: token_dict_rev[x], predicts[0][1:3]))
     print(f'Actual tokens: {predictions[-1][1][:80]}')
     if len(predictions) > 10:
