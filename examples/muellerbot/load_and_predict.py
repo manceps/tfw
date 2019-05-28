@@ -5,6 +5,15 @@ import numpy as np
 from keras_bert import load_trained_model_from_checkpoint, Tokenizer
 
 
+REDACTION_MARKERS = set([
+    '[Harm to Ongoing Matter - Grand Jury]',
+    '[Harm to Ongoing Matter - Personal Privacy]',
+    '[Harm to Ongoing Matter]',
+    '[Personal Privacy - Grand Jury]',
+    '[Personal Privacy]',
+    '[HOM]',
+])
+
 if len(sys.argv) != 4:
     print('python load_model.py CONFIG_PATH CHECKPOINT_PATH DICT_PATH')
     print('CONFIG_PATH:     $UNZIPPED_MODEL_PATH/bert_config.json')
