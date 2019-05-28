@@ -78,7 +78,7 @@ tokenizer = Tokenizer(token_dict)
 # text = text or 'Mathematics is a discipline that uses symbolic language to study concepts such as quantity, structure, change, and space.'
 
 
-def load_pipeline():
+def load_pipeline(UNZIPPED_MODEL_PATH=UNZIPPED_MODEL_PATH):
     if len(sys.argv) != 4:
         print('python load_model.py CONFIG_PATH CHECKPOINT_PATH DICT_PATH')
         print('CONFIG_PATH:     $UNZIPPED_MODEL_PATH/bert_config.json')
@@ -140,9 +140,11 @@ for i, text in enumerate(sentences):
 
     predicts = model.predict([indices, segments, masks])[0]
     predicts = np.argmax(predicts, axis=-1)
-    predictions.append((' '.join(list(map(lambda x: token_dict_rev[x],
-        [x for (j, x) in enumerate(predicts[0]) if j + 1 in redactions]))), text))
-    print('Fill with: ', list(map(lambda x: token_dict_rev[x], predicts[0][3:5])))
+    predictions_parameterized = list(map(lambda x: token_dict_rev[x],
+        [x for (j, x) in enumerate(predicts[0]) if j + 1 in redactions]))
+    predictions.append((predictions_parameterized, text))
+    predictions_hardcoded = list(map(lambda x: token_dict_rev[x], predicts[0][3:5]))
+    print('Fill with: ', predcitions_hardcoded)
 
     print(f'New fill with: {predictions[-1][0]}')
     # list(map(lambda x: token_dict_rev[x], predicts[0][1:3]))
