@@ -12,7 +12,7 @@ if len(sys.argv) == 2:
     UNZIPPED_MODEL_PATH = os.path.abspath(sys.argv[1])
 
 UNZIPPED_MODEL_PATH = (
-    UNZIPPED_MODEL_PATH or os.environ['UNZIPPED_MODEL_PATH'] or os.path.abspath(
+    UNZIPPED_MODEL_PATH or os.environ.get('UNZIPPED_MODEL_PATH') or os.path.abspath(
         '~/midata/public/models/bert/multi_cased_L-12_H-768_A-12'))
 
 
