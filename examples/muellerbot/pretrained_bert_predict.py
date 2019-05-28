@@ -24,9 +24,9 @@ def load_model():
         print('DICT_PATH:       $UNZIPPED_MODEL_PATH/vocab.txt')
         sys.argv = [
             sys.argv[0],
-            os.environ.get('CONFIG_PATH', None) or os.path.join(os.environ['UNZIPPED_MODEL_PATH'], 'bert_config.json'),
-            os.environ.get('CHECKPOINT_PATH', None) or os.path.join(os.environ['UNZIPPED_MODEL_PATH'], 'bert_model.ckpt'),
-            os.environ.get('DICT_PATH', None) or os.path.join(os.environ['UNZIPPED_MODEL_PATH'], 'vocab.txt'),
+            os.environ.get('CONFIG_PATH') or os.path.join(os.environ['UNZIPPED_MODEL_PATH'], 'bert_config.json'),
+            os.environ.get('CHECKPOINT_PATH') or os.path.join(os.environ['UNZIPPED_MODEL_PATH'], 'bert_model.ckpt'),
+            os.environ.get('DICT_PATH') or os.path.join(os.environ['UNZIPPED_MODEL_PATH'], 'vocab.txt'),
         ]
 
     if not all([os.path.exists(p) for p in sys.argv[1:4]]):
