@@ -125,10 +125,10 @@ sentences = [
 predictions = []
 
 for i, text in enumerate(sentences):
-    print("Redacting the first two words:")
+    print("Redacting the first two words...")
     tokens = tokenizer.tokenize(text)
     tokens[1] = tokens[2] = '[MASK]'
-    print('Tokens:', tokens)
+    print(f'Tokens: {tokens}')
 
     indices = np.asarray([[token_dict[token] for token in tokens] + [0] * (512 - len(tokens))])
     segments = np.asarray([[0] * len(tokens) + [0] * (512 - len(tokens))])
@@ -139,7 +139,7 @@ for i, text in enumerate(sentences):
     predicts = model.predict([indices, segments, masks])[0]
     predicts = np.argmax(predicts, axis=-1)
     predictions.append((' '.join(list(map(lambda x: token_dict_rev[x], predicts[0][1:3]))), text[:30]))
-    print('Fill with: {predictions[-1][0]}')
+    print(f'Fill with: {predictions[-1][0]}')
     # list(map(lambda x: token_dict_rev[x], predicts[0][1:3]))
     print(f'Actual text: {predictions[-1][1]}')
     if len(predictions) > 10:
