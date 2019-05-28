@@ -123,25 +123,28 @@ sentences = [
 
 
 predictions = []
-
+redactions = [2, 3]
 for i, text in enumerate(sentences):
-    print("Redacting the first two words...")
+    print("Redacting words {redactions}:")
     tokens = tokenizer.tokenize(text)
-    tokens[1] = tokens[2] = '[MASK]'
+    for r in redactions:
+        tokens[r + 1] = '[MASK]'
     print(f'Tokens: {tokens}')
 
     indices = np.asarray([[token_dict[token] for token in tokens] + [0] * (512 - len(tokens))])
     segments = np.asarray([[0] * len(tokens) + [0] * (512 - len(tokens))])
     masks = np.asarray([[0] * 512])
-    masks[0][1] = masks[0][2] = 1
+    for r in redactions:
+        masks[0][r + 1] = 1
     # masks = np.asarray([[0, 1, 1] + [0] * (512 - 3)])
 
     predicts = model.predict([indices, segments, masks])[0]
     predicts = np.argmax(predicts, axis=-1)
-    predictions.append((' '.join(list(map(lambda x: token_dict_rev[x], predicts[0][1:3]))), text[:30]))
+    predictions.append((' '.join(list(map(lambda x: token_dict_rev[x],
+        predicts[0][1:3]))), text))
     print(f'Fill with: {predictions[-1][0]}')
     # list(map(lambda x: token_dict_rev[x], predicts[0][1:3]))
-    print(f'Actual text: {predictions[-1][1]}')
+    print(f'Actual tokens: {predictions[-1][1][:80]}')
     if len(predictions) > 10:
         break
 
