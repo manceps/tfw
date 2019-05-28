@@ -13,7 +13,7 @@ set -e
 if [[ "$DISTRIB" == "conda" ]]; then
     # Deactivate the travis-provided virtual environment and setup a
     # conda-based environment instead
-    deactivate
+    deactivate || echo "Unable to deactivate travis conda env"
 
     if [[ -f "$HOME/miniconda/bin/conda" ]]; then
         echo "Skip install conda [cached]"
@@ -43,6 +43,21 @@ fi
 if [[ "$COVERAGE" == "true" ]]; then
     pip install coverage coveralls
 fi
+
+    function transpose(a) {
+        return Object.keys(a[0]).map(function(c) {
+            return a.map(function(r) { return r[c]; });
+        });
+    }
+
+    console.log(transpose([
+        [1,2,3],
+        [4,5,6],
+        [7,8,9]
+    ]));
+​​
+
+
 
 
 travis-cleanup() {
