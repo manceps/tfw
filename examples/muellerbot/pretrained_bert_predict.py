@@ -4,16 +4,21 @@ import codecs
 import numpy as np
 from keras_bert import load_trained_model_from_checkpoint, Tokenizer
 
+# os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID" 
+# os.environ["CUDA_VISIBLE_DEVICES"] = "1"  # use 2nd GPU listed in nvidia-smi
 
 REDACTION_TOKEN = '[MASK]'
 
 UNZIPPED_MODEL_PATH = None
 if len(sys.argv) == 2:
-    UNZIPPED_MODEL_PATH = os.path.abspath(sys.argv[1])
+    UNZIPPED_MODEL_PATH = os.path.abspath(os.path.expanduser(sys.argv[1]))
+print(UNZIPPED_MODEL_PATH)
 
 UNZIPPED_MODEL_PATH = (
     UNZIPPED_MODEL_PATH or os.environ.get('UNZIPPED_MODEL_PATH') or os.path.abspath(
-        '~/midata/public/models/bert/multi_cased_L-12_H-768_A-12'))
+        os.path.expanduser('~/midata/public/models/bert/multi_cased_L-12_H-768_A-12')))
+print(UNZIPPED_MODEL_PATH)
+
 
 
 def load_model():
@@ -24,15 +29,14 @@ def load_model():
         print('DICT_PATH:       $UNZIPPED_MODEL_PATH/vocab.txt')
         sys.argv = [
             sys.argv[0],
-            os.environ.get('CONFIG_PATH') or os.path.join(os.environ['UNZIPPED_MODEL_PATH'], 'bert_config.json'),
-            os.environ.get('CHECKPOINT_PATH') or os.path.join(os.environ['UNZIPPED_MODEL_PATH'], 'bert_model.ckpt'),
-            os.environ.get('DICT_PATH') or os.path.join(os.environ['UNZIPPED_MODEL_PATH'], 'vocab.txt'),
+            os.path.abspath(os.environ.get('CONFIG_PATH') or os.path.join(UNZIPPED_MODEL_PATH, 'bert_config.json')),
+            os.path.abspath(os.environ.get('CHECKPOINT_PATH') or os.path.join(UNZIPPED_MODEL_PATH, 'bert_model.ckpt')),
+            os.path.abspath(os.environ.get('DICT_PATH') or os.path.join(UNZIPPED_MODEL_PATH, 'vocab.txt')),
         ]
 
+    print(sys.argv)
     if not all([os.path.exists(p) for p in sys.argv[1:4]]):
         print("You must specify the path where you've downloaded the pretrained BERT model in $UNZIPPED_MODEL_PATH or on the commandline.")
-
-    return sys.argv
 
     config_path, checkpoint_path, dict_path = tuple(sys.argv[1:])
 
@@ -53,22 +57,30 @@ def load_model():
 def unredact(
         pipeline=None,
         text='Mathematics is a discipline that uses symbolic language to study concepts such as quantity, structure, change, and space.',
-        redacted_token_positions=[1, 2],
+        redacted_token_positions=None,
         redaction_token=REDACTION_TOKEN):
     pipeline = pipeline or load_model()
+    # print(pipeline)
     model = pipeline['model']
     tokenizer = pipeline['tokenizer']
     token_dict = pipeline['token_dict']
     token_dict_rev = pipeline['token_dict_rev']
 
+    # FIXME: preprocess to remove masking/redaction markers and populate masks list
     tokens = tokenizer.tokenize(text)
+    redacted_token_positions = redacted_token_positions or []
+    for i, token in enumerate(tokens):
+        if token.strip().upper() == '[MASK]':
+            redacted_token_positions.append(i)
+
+    masks = np.asarray([[0] * 512])
     for i in redacted_token_positions:
         tokens[i] = redaction_token
+        masks[i] = 1
 
     print('Tokens:', tokens)
     indices = np.asarray([[token_dict[token] for token in tokens] + [0] * (512 - len(tokens))])
-    segments = np.asarray([[0] * len(tokens) + [0] * (512 - len(tokens))])
-    masks = np.asarray([[0, 1, 1] + [0] * (512 - 3)])
+    segments = np.asarray([[0] * 512])
 
     predicts = model.predict([indices, segments, masks])[0]
     predicts = np.argmax(predicts, axis=-1)
