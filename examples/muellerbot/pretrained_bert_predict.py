@@ -4,8 +4,8 @@ import codecs
 import numpy as np
 from keras_bert import load_trained_model_from_checkpoint, Tokenizer
 
-os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID" 
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"  # use 2nd GPU listed in nvidia-smi
+# os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID" 
+# os.environ["CUDA_VISIBLE_DEVICES"] = "1"  # use 2nd GPU listed in nvidia-smi
 
 REDACTION_TOKEN = '[MASK]'
 
@@ -66,6 +66,7 @@ def unredact(
     token_dict = pipeline['token_dict']
     token_dict_rev = pipeline['token_dict_rev']
 
+    # FIXME: preprocess to remove masking/redaction markers and populate masks list
     tokens = tokenizer.tokenize(text)
     redacted_token_positions = redacted_token_positions or []
     for i, token in enumerate(tokens):
