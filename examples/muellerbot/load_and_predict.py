@@ -52,7 +52,7 @@ TEXT = '''
     interest in WikiLeaks\'s releases of documents and welcomed their potential to damage
     candidate Clinton. Beginning in June 2016, [Harm to Ongoing Matter] forecast to senior
     Campaign officials that WikiLeaks would release information damaging to candidate Clinton.
-    ikiLeaks\'s first release came in July 2016. Around the same time, candidate Trump announced
+    WikiLeaks\'s first release came in July 2016. Around the same time, candidate Trump announced
     that he hoped Russia would recover emails described as missing from a private server used by
     linton when she was Secretary of State (he later said that he was speaking sarcastically).
     '''
@@ -126,23 +126,30 @@ def load_pipeline(UNZIPPED_MODEL_PATH=UNZIPPED_MODEL_PATH, cased=BERT_MODEL_CASE
     return NLPPipeline(model=model, token_dict=token_dict, token_dict_rev=token_dict_rev, tokenizer=tokenizer)
 
 
-P = load_pipeline()
+if 'P' not in globals() and 'P' not in locals():
+    P = load_pipeline()
 
 
 def find_first_hom_tokens(df, text=TEXT, substring='of documents and'):
-    df = clean_dataframe(df) if isinstance(df, str) else df
-    text = None
-    for t in df.text:
-        if substring in t:
-            text = t
-            break
+    if not text:
+        df = clean_dataframe(df) if isinstance(df, str) else df
+        for t in df.text:
+            if substring in t:
+                text = t
+                break
+    print(f'TEXT: {text}')
     tokens = P.tokenizer.tokenize(text)
     joined_tokens = ' '.join(tokens)
-    hom = ' '.join(P.tokenizer.tokenize('[Harm to Ongoing Matter]'))
+    print(f'joined_tokens: {joined_tokens}')
+    hom = ' '.join(P.tokenizer.tokenize('[Harm to Ongoing Matter]')[1:-1])
+    print(f'joined_hom: {hom}')
     hom_start = joined_tokens.find(hom)
     hom_stop = hom_start + len(hom)
-    prefix_tokens = joined_tokens[:hom_start + 1].split()
+    print(f'hom_start: {hom_start}, hom_stop: {hom_stop}')
+    prefix_tokens = joined_tokens[:(hom_start + 1)].split()
     suffix_tokens = joined_tokens[hom_stop:].split()
+    print(f'HOM prefix_tokens: {prefix_tokens}\nHOM suffix_tokens: {suffix_tokens}')
+
     return prefix_tokens, suffix_tokens
 
 
