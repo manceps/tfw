@@ -58,31 +58,34 @@ TEXT = ('''
     linton when she was Secretary of State (he later said that he was speaking sarcastically).
     ''', '[Harm to Ongoing Matter]', 5, 4)
 
-TEXT2 = ('''
+TEXTS = [
+    TEXT,
+
+    ('''
     On October 20, 2017, the Acting Attorney General confirmed in a memorandum the Special
     Counsel's investigative authority as to several individuals and entities. First, as part of
     a full and thorough investigation of the Russian government's efforts to interfere in the
     2016 presidential election," the Special Counsel was authorized to investigate the pertinent
     ctivities of Michael Cohen, Richard Gates, [Personal Privacy] , Roger Stone, and
-    ''', '[Personal Privacy]', 12, 2)
+    ''', '[Personal Privacy]', 12, 2),
 
-TEXT3 = ('''By February 2016, internal IRA documents referred to support for the Trump Campaign
+    ('''By February 2016, internal IRA documents referred to support for the Trump Campaign
     and opposition to candidate Clinton.49 For example, [Harm to Ongoing Matter] directions to
     IRA operators
-    ''', '[Harm to Ongoing Matter]', 23, 5)
+    ''', '[Harm to Ongoing Matter]', 23, 5),
 
-TEXT4 = ('''The focus on the U.S. presidential campaign continued throughout 2016.
+    ('''The focus on the U.S. presidential campaign continued throughout 2016.
     In [Harm to Ongoing Matter] 2016 internal [Harm to Ongoing Matter] reviewing the
     IRA-controlled Facebook group "Secured Borders,"
-    ''', '[Harm to Ongoing Matter]', 23, 3)
+    ''', '[Harm to Ongoing Matter]', 23, 3),
 
-TEXT5 = ('''IRA employees frequently used Investigative Technique Twitter, Facebook, and Instagram
+    ('''IRA employees frequently used Investigative Technique Twitter, Facebook, and Instagram
     to contact and recruit U.S. persons who followed the group. The IRA recruited U.S. persons
     from across the political spectrum. For example, the IRA targeted the family
     of [Personal Privacy] and a number of black social justice activists
-    ''', '[Personal Privacy]', 31, 3)
+    ''', '[Personal Privacy]', 31, 3),
 
-TEXT6 = ('''
+    ('''
     A. GRU Hacking Directed at the Clinton Campaign 1. GRU Units Target the Clinton Campaign Two military units of the GRU
     carried out the computer intrusions into the Clinton Campaign, DNC, and DCCC: Military Units 26165 and 74455.110
     Military Unit 26165 is a GRU cyber unit dedicated to targeting military, political, governmental, and non-governmental
@@ -91,15 +94,26 @@ TEXT6 = ('''
     department conducted large-scale spearphishing campaigns. 112 Investigative Technique a bitcoin mining operation
     to 109 As discussed in Section V below, our Office charged 12 GRU officers for crimes arising from the hacking of these
     computers, principally with conspiring to commit computer intrusions, in violation of 18 U.S.C. $$1030 and 371.
-    See Volume 1, Section V.B, infra; Indictment, United States v. Netyksho, No., 'Investigative Technique' a bitcoin mining
+    See Volume 1, Section V.B, infra; Indictment, United States v. Netyksho, No., [Investigative Technique] a bitcoin mining
     operation to secure bitcoins used to purchase computer infrastructure used in hacking operations.
-    ''', "'Investigative Technique'", 36, 3)
+    ''', "[Investigative Technique]", 36, 3),
 
-TEXT7 = ('''
-    TEXT: Footnote: 113. Bitcoin mining consists of unlocking new bitcoins by solving computational problems. [IT] kept its
+    ('''
+    Footnote: 113. Bitcoin mining consists of unlocking new bitcoins by solving computational problems. [IT] kept its
     newly mined coins in an account on the bitcoin exchange platform CEX.io. To make purchases, the GRU routed funds
     into other accounts through transactions designed to obscure the source of funds. Netyksho Indictment 62.
-    ''', 37, 2)
+    ''', 37, 2),
+
+    ('''
+    The first set of GRIU-controlled computers, known by the GRU as "middle servers," sent and received messages to and
+    from malware on the DNC/DCCC networks. The middle servers, in turn, relayed messages to a second set of
+    GRU-controlled computers, labeled internally by the GRU as an "AMS Panel." The AMS Panel Investigative Technique
+    served as a nerve center through which GRU officers monitored and directed the malware's operations on the
+    DNC/DCCC networks. 127 The AMS Panel used to control X-Agent during the DCCC and DNC intrusions was housed on a
+    leased computer located near IT Arizona.
+    ''', 39, 3),
+    ]
+
 # to manually generate plausible redaction unredactions:
 # df = clean_dataframe()
 
@@ -291,7 +305,7 @@ def unredact_text(text, redactions=[2, 3]):
 
 if __name__ == '__main__':
     df = clean_dataframe()
-    for text, marker, page, num_redactions in [TEXT, TEXT2, TEXT3, TEXT4, TEXT5]:
+    for text, marker, page, num_redactions in TEXTS:
         prefix_tokens, suffix_tokens = find_first_hom_tokens(df=None, text=text, marker=marker)
         print(f'*******\npage: {page}\nnum_words: {num_redactions}\nprefix_tokens: {prefix_tokens}\nsuffix_tokens: {suffix_tokens}')
         print(unredact_tokens(prefix_tokens=prefix_tokens, suffix_tokens=suffix_tokens, num_redactions=num_redactions))
