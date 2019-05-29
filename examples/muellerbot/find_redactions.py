@@ -77,6 +77,7 @@ def get_line_context(df, redaction_marker='[Harm to Ongoing Matter]',
 
 def find_text(df='mueller-report-with-redactions-marked.csv', substring='of documents and', marker='[Personal Privacy]'):
     df = clean_dataframe(df) if isinstance(df, str) else df
+    text = ''
     for t in df.text:
         if substring in t:
             text = t

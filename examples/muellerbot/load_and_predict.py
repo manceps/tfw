@@ -110,6 +110,22 @@ TEXTS = [
     DNC/DCCC networks. 127 The AMS Panel used to control X-Agent during the DCCC and DNC intrusions was housed on a
     leased computer located near IT Arizona.
     ''', '[Investigative Technique]', 39, 3),
+
+    ('''Footnote: 140. See, e.g., Internet Archive, "https://dcleaks.com/" (archive date Nov. 10, 2016). Additionally,
+    DCLeaks released documents relating to [Personal Privacy] , emails belonging to [PP] , and emails from  2015 relating
+    to Republican Party employees (under the portfolio name "The United States Republican Party\').
+    "The United States Republican Party" portfolio contained approximately 300 emails from a variety of GOP members, PACs,
+    campaigns, state parties, and businesses dated between May and October 2015. According to open-source reporting,
+    these victims shared the same Tennessee-based web-hosting company, called Smartech Corporation.'
+    ''', '[Personal Privacy]', 41, 5),
+
+    ('''Footnote: 140. See, e.g., Internet Archive, "https://dcleaks.com/" (archive date Nov. 10, 2016). Additionally,
+    DCLeaks released documents relating to [PP], emails belonging to [Personal Privacy] , and emails from  2015 relating
+    to Republican Party employees (under the portfolio name "The United States Republican Party\').
+    "The United States Republican Party" portfolio contained approximately 300 emails from a variety of GOP members, PACs,
+    campaigns, state parties, and businesses dated between May and October 2015. According to open-source reporting,
+    these victims shared the same Tennessee-based web-hosting company, called Smartech Corporation.'
+    ''', '[Personal Privacy]', 41, 1),
     ]
 
 # to manually generate plausible redaction unredactions:
