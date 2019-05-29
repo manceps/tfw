@@ -47,7 +47,8 @@ def get_unredacted_sentences(df='mueller-report-with-redactions-marked.csv',
         print()
 
 
-TEXT = '''
+# (TEXT, REDACTION_MARKER, PAGE_NUM, NUM_WORDS_IN_REDACTION)
+TEXT = ('''
     The presidential campaign of Donald J. Trump ("Trump Campaign" or "Campaign") showed
     interest in WikiLeaks\'s releases of documents and welcomed their potential to damage
     candidate Clinton. Beginning in June 2016, [Harm to Ongoing Matter] forecast to senior
@@ -55,8 +56,31 @@ TEXT = '''
     WikiLeaks\'s first release came in July 2016. Around the same time, candidate Trump announced
     that he hoped Russia would recover emails described as missing from a private server used by
     linton when she was Secretary of State (he later said that he was speaking sarcastically).
-    '''
+    ''', '[Harm to Ongoing Matter]', 5, 4)
 
+TEXT2 = ('''
+    On October 20, 2017, the Acting Attorney General confirmed in a memorandum the Special
+    Counsel's investigative authority as to several individuals and entities. First, as part of
+    a full and thorough investigation of the Russian government's efforts to interfere in the
+    2016 presidential election," the Special Counsel was authorized to investigate the pertinent
+    ctivities of Michael Cohen, Richard Gates, [Personal Privacy] , Roger Stone, and
+    ''', '[Personal Privacy]', 12, 2)
+
+TEXT3 = ('''By February 2016, internal IRA documents referred to support for the Trump Campaign
+    and opposition to candidate Clinton.49 For example, [Harm to Ongoing Matter] directions to
+    IRA operators
+    ''', '[Harm to Ongoing Matter]', 23, 5)
+
+TEXT4 = ('''The focus on the U.S. presidential campaign continued throughout 2016.
+    In [Harm to Ongoing Matter] 2016 internal [Harm to Ongoing Matter] reviewing the
+    IRA-controlled Facebook group "Secured Borders,"
+    ''', '[Harm to Ongoing Matter]', 23, 3)
+
+TEXT5 = ('''IRA employees frequently used Investigative Technique Twitter, Facebook, and Instagram
+    to contact and recruit U.S. persons who followed the group. The IRA recruited U.S. persons
+    from across the political spectrum. For example, the IRA targeted the family
+    of [Personal Privacy] and a number of black social justice activists
+    ''', '[Personal Privacy]', 31, 3)
 
 # if len(sys.argv) != 4:
 #     print('USAGE: python load_model.py CONFIG_PATH CHECKPOINT_PATH DICT_PATH')
@@ -134,7 +158,7 @@ if 'P' not in globals() and 'P' not in locals():
     P = load_pipeline()
 
 
-def find_first_hom_tokens(df, text=TEXT, substring='of documents and'):
+def find_first_hom_tokens(df, text=TEXT, substring='of documents and', marker='[Personal Privacy]'):
     if not text:
         df = clean_dataframe(df) if isinstance(df, str) else df
         for t in df.text:
@@ -145,7 +169,7 @@ def find_first_hom_tokens(df, text=TEXT, substring='of documents and'):
     tokens = P.tokenizer.tokenize(text)
     joined_tokens = ' '.join(tokens)
     print(f'joined_tokens: {joined_tokens}')
-    hom = ' '.join(P.tokenizer.tokenize('[Harm to Ongoing Matter]')[1:-1])
+    hom = ' '.join(P.tokenizer.tokenize(marker)[1:-1])
     print(f'joined_hom: {hom}')
     hom_start = joined_tokens.find(hom)
     hom_stop = hom_start + len(hom)
@@ -246,9 +270,10 @@ def unredact_text(text, redactions=[2, 3]):
 
 if __name__ == '__main__':
     df = clean_dataframe()
-    prefix_tokens, suffix_tokens = find_first_hom_tokens(df)
-    print(f'prefix_tokens: {prefix_tokens}\nsuffix_tokens: {suffix_tokens}')
-    print(unredact_tokens(prefix_tokens=prefix_tokens, suffix_tokens=suffix_tokens, num_redactions=5))
+    for text, marker, page, num_redactions in [TEXT, TEXT2, TEXT3, TEXT4, TEXT5]:
+        prefix_tokens, suffix_tokens = find_first_hom_tokens(df=None, text=text, marker=marker)
+        print(f'*******\npage: {page}\nnum_words: {num_redactions}\nprefix_tokens: {prefix_tokens}\nsuffix_tokens: {suffix_tokens}')
+        print(unredact_tokens(prefix_tokens=prefix_tokens, suffix_tokens=suffix_tokens, num_redactions=num_redactions))
 
     predictions = []
     for sentnum, text in enumerate(sentences):
