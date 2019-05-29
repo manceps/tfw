@@ -1,5 +1,5 @@
 CASED TOKENIZER  
-*******
+
 
 TEXT:
     The presidential campaign of Donald J. Trump ("Trump Campaign" or "Campaign") showed
