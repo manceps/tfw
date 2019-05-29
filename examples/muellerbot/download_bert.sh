@@ -1,13 +1,32 @@
+# Download official BERT models:
 
-export BERT_MODEL=UNCASED
-export BERT_MODELS_DIR=~/midata/public/models/bert/
+# [BERT-Base, Uncased](https://storage.googleapis.com/bert_models/2018_10_18/uncased_L-12_H-768_A-12.zip):
+#  12-layer, 768-hidden, 12-heads, 110M parameters
+# [BERT-Large, Uncased](https://storage.googleapis.com/bert_models/2018_10_18/uncased_L-24_H-1024_A-16.zip):
+#  24-layer, 1024-hidden, 16-heads, 340M parameters
+# [BERT-Base, Cased: 12-layer](https://storage.googleapis.com/bert_models/2018_10_18/cased_L-12_H-768_A-12.zip):
+#  768-hidden, 12-heads , 110M parameters
+# [BERT-Large, Cased: 24-layer](https://storage.googleapis.com/bert_models/2018_10_18/cased_L-24_H-1024_A-16.zip):
+#  1024-hidden, 16-heads, 340M parameters
+# [BERT-Base, Multilingual Cased](https://storage.googleapis.com/bert_models/2018_11_23/multi_cased_L-12_H-768_A-12.zip):
+#  (New, recommended) 104 languages, 12-layer, 768-hidden, 12-heads, 110M parameters
+# BERT-Base, Multilingual Uncased](https://storage.googleapis.com/bert_models/2018_11_03/multilingual_L-12_H-768_A-12.zip):
+#  (Orig, not recommended) (Not recommended, use Multilingual Cased instead): 102 languages, 12-layer, 768-hidden, 12-heads, 110M parameters
+# [BERT-Base, Chinese](https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-12.zip):
+#  Chinese Simplified and Traditional, 12-layer, 768-hidden, 12-heads, 110M parameters
 
-if [ "$BERT_MODEL" == UNCASED ]; then
+
+export BERT_MODEL_CASED=True
+export BERT_MODELS_DIR=~/midata/public/models/bert
+
+if [ "$BERT_MODEL_CASED" == "False" ]; then
+    # https://storage.googleapis.com/bert_models/2018_10_18/uncased_L-12_H-768_A-12.zip
     export BERT_MODEL_DATE=2018_10_18
     export BERT_MODEL_NAME=uncased_L-12_H-768_A-12
 else
-    export BERT_MODEL_DATE=2018_11_23
-    export BERT_MODEL_NAME=multi_cased_L-12_H-768_A-12
+    # https://storage.googleapis.com/bert_models/2018_10_18/cased_L-12_H-768_A-12.zip
+    export BERT_MODEL_DATE=2018_10_18
+    export BERT_MODEL_NAME=cased_L-12_H-768_A-12
 fi
 
 export BERT_MODEL_DIR="$BERT_MODELS_DIR/$BERT_MODEL_NAME"
@@ -35,6 +54,7 @@ mkdir -p $BERT_MODELS_DIR
 if [ ! -f $BERT_MODEL_ZIP ]; then
     # -c continues a partial download, but this isn't useful with the above if statement
     wget -c -O "$BERT_MODEL_ZIP" "https://storage.googleapis.com/bert_models/$BERT_MODEL_DATE/$BERT_MODEL_NAME.zip"
+                                # https://storage.googleapis.com/bert_models/2018_10_18/cased_L-12_H-768_A-12.zip
 fi
 
 # cd "$BERT_MODELS_DIR"
