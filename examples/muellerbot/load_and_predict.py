@@ -100,16 +100,16 @@ TEXTS = [
     Footnote: 113. Bitcoin mining consists of unlocking new bitcoins by solving computational problems. [IT] kept its
     newly mined coins in an account on the bitcoin exchange platform CEX.io. To make purchases, the GRU routed funds
     into other accounts through transactions designed to obscure the source of funds. Netyksho Indictment 62.
-    ''', 37, 2),
+    ''', '[IT]', 37, 2),
 
     ('''
     The first set of GRIU-controlled computers, known by the GRU as "middle servers," sent and received messages to and
     from malware on the DNC/DCCC networks. The middle servers, in turn, relayed messages to a second set of
-    GRU-controlled computers, labeled internally by the GRU as an "AMS Panel." The AMS Panel Investigative Technique
+    GRU-controlled computers, labeled internally by the GRU as an "AMS Panel." The AMS Panel [Investigative Technique]
     served as a nerve center through which GRU officers monitored and directed the malware's operations on the
     DNC/DCCC networks. 127 The AMS Panel used to control X-Agent during the DCCC and DNC intrusions was housed on a
     leased computer located near IT Arizona.
-    ''', 39, 3),
+    ''', '[Investigative Technique]', 39, 3),
     ]
 
 # to manually generate plausible redaction unredactions:
