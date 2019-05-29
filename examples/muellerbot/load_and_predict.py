@@ -82,6 +82,27 @@ TEXT5 = ('''IRA employees frequently used Investigative Technique Twitter, Faceb
     of [Personal Privacy] and a number of black social justice activists
     ''', '[Personal Privacy]', 31, 3)
 
+TEXT6 = ('''
+    A. GRU Hacking Directed at the Clinton Campaign 1. GRU Units Target the Clinton Campaign Two military units of the GRU
+    carried out the computer intrusions into the Clinton Campaign, DNC, and DCCC: Military Units 26165 and 74455.110
+    Military Unit 26165 is a GRU cyber unit dedicated to targeting military, political, governmental, and non-governmental
+    organizations outside of Russia, including in the United States.111 The unit was sub-divided into departments with
+    different specialties. One department, for example, developed specialized malicious software ("malware"), while another
+    department conducted large-scale spearphishing campaigns. 112 Investigative Technique a bitcoin mining operation
+    to 109 As discussed in Section V below, our Office charged 12 GRU officers for crimes arising from the hacking of these
+    computers, principally with conspiring to commit computer intrusions, in violation of 18 U.S.C. $$1030 and 371.
+    See Volume 1, Section V.B, infra; Indictment, United States v. Netyksho, No., 'Investigative Technique' a bitcoin mining
+    operation to secure bitcoins used to purchase computer infrastructure used in hacking operations.
+    ''', "'Investigative Technique'", 36, 3)
+
+TEXT7 = ('''
+    TEXT: Footnote: 113. Bitcoin mining consists of unlocking new bitcoins by solving computational problems. [IT] kept its
+    newly mined coins in an account on the bitcoin exchange platform CEX.io. To make purchases, the GRU routed funds
+    into other accounts through transactions designed to obscure the source of funds. Netyksho Indictment 62.
+    ''', 37, 2)
+# to manually generate plausible redaction unredactions:
+# df = clean_dataframe()
+
 # if len(sys.argv) != 4:
 #     print('USAGE: python load_model.py CONFIG_PATH CHECKPOINT_PATH DICT_PATH')
 #     print()
