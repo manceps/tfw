@@ -121,6 +121,10 @@ def load_pipeline(UNZIPPED_MODEL_PATH=UNZIPPED_MODEL_PATH, cased=BERT_MODEL_CASE
             token = line.strip()
             token_dict[token] = len(token_dict)
     token_dict_rev = {v: k for k, v in token_dict.items()}
+    if cased:
+        print('***************CASED TOKENIZER*******************')
+    else:
+        print('***************uncased tokenizer*******************')
     tokenizer = Tokenizer(token_dict, cased=cased)
 
     return NLPPipeline(model=model, token_dict=token_dict, token_dict_rev=token_dict_rev, tokenizer=tokenizer)
@@ -146,7 +150,7 @@ def find_first_hom_tokens(df, text=TEXT, substring='of documents and'):
     hom_start = joined_tokens.find(hom)
     hom_stop = hom_start + len(hom)
     print(f'hom_start: {hom_start}, hom_stop: {hom_stop}')
-    prefix_tokens = joined_tokens[:(hom_start + 1)].split()
+    prefix_tokens = joined_tokens[:hom_start].split()
     suffix_tokens = joined_tokens[hom_stop:].split()
     print(f'HOM prefix_tokens: {prefix_tokens}\nHOM suffix_tokens: {suffix_tokens}')
 
@@ -177,12 +181,11 @@ def unredact_tokens(prefix_tokens=[], suffix_tokens=[], num_redactions=5):
     indices = np.asarray([[P.token_dict[token] for token in tokens] + [0] * (512 - len(tokens))])
     segments = np.asarray([[0] * len(tokens) + [0] * (512 - len(tokens))])
     masks = np.asarray([[0] * 512])
-    for i, t in enumerate(tokens):
-        masks[0][i] = 1 if t == MASK_TOKEN else 0
     redactions = []
     for i, t in enumerate(tokens):
         if t == MASK_TOKEN:
-            redactions.append(i + 1)
+            redactions.append(i - 1)
+            masks[0][i] = 1
 
     # masks = np.asarray([[0, 1, 1] + [0] * (512 - 3)])
 
