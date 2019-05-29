@@ -48,7 +48,8 @@ def get_unredacted_sentences(df='mueller-report-with-redactions-marked.csv',
 
 
 # (TEXT, REDACTION_MARKER, PAGE_NUM, NUM_WORDS_IN_REDACTION)
-TEXT = ('''
+TEXTS = [
+    ('''
     The presidential campaign of Donald J. Trump ("Trump Campaign" or "Campaign") showed
     interest in WikiLeaks\'s releases of documents and welcomed their potential to damage
     candidate Clinton. Beginning in June 2016, [Harm to Ongoing Matter] forecast to senior
@@ -56,10 +57,7 @@ TEXT = ('''
     WikiLeaks\'s first release came in July 2016. Around the same time, candidate Trump announced
     that he hoped Russia would recover emails described as missing from a private server used by
     linton when she was Secretary of State (he later said that he was speaking sarcastically).
-    ''', '[Harm to Ongoing Matter]', 5, 4)
-
-TEXTS = [
-    TEXT,
+    ''', '[Harm to Ongoing Matter]', 5, 4),
 
     ('''
     On October 20, 2017, the Acting Attorney General confirmed in a memorandum the Special
@@ -193,7 +191,7 @@ if 'P' not in globals() and 'P' not in locals():
     P = load_pipeline()
 
 
-def find_first_hom_tokens(df, text=TEXT, substring='of documents and', marker='[Personal Privacy]'):
+def find_first_hom_tokens(df, text=None, substring='of documents and', marker='[Personal Privacy]'):
     if not text:
         df = clean_dataframe(df) if isinstance(df, str) else df
         for t in df.text:

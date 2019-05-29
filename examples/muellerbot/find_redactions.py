@@ -75,6 +75,23 @@ def get_line_context(df, redaction_marker='[Harm to Ongoing Matter]',
     return line_pairs
 
 
+def find_text(df='mueller-report-with-redactions-marked.csv', substring='of documents and', marker='[Personal Privacy]'):
+    df = clean_dataframe(df) if isinstance(df, str) else df
+    for t in df.text:
+        if substring in t:
+            text = t
+            break
+    print(f'TEXT: {text}')
+    marker_start = text.find(marker)
+    marker_stop = marker_start + len(marker)
+    print(f'marker_start: {marker_start}, marker_stop: {marker_stop}')
+    prefix = text[:marker_start]
+    suffix = text[marker_stop:]
+    print(f'HOM prefix: {prefix}\nHOM suffix: {suffix}')
+
+    return prefix, suffix
+
+
 def main():
     if len(sys.argv) > 1:
         csv_filename = sys.argv[1]
