@@ -1,4 +1,6 @@
-CASED TOKENIZER
+CASED TOKENIZER  
+*******
+
 TEXT:
     The presidential campaign of Donald J. Trump ("Trump Campaign" or "Campaign") showed
     interest in WikiLeaks's releases of documents and welcomed their potential to damage
