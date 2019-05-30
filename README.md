@@ -5,8 +5,7 @@ At [TensorFlow.world 2019](https://conferences.oreilly.com/tensorflow/tf-ca), on
 - [Wed May 29 at Vacasa](http://bit.ly/tfnw-052919)
 - [Thurs May 30 at New Relic](https://www.meetup.com/pdxpython/events/gmxlbqyzhbfc)
 
-Many of the techniques we use are explained in detail in [**N**atural **L**anguage **P**rocessing **i**n **A**ction](http://bit.ly/gh-readme-nlpia-book). There's a 50% discount on the book Mon & Tues, May 27 & 28: wm052419au
-
+Many of the techniques we use are explained in detail in [**N**atural **L**anguage **P**rocessing **i**n **A**ction](http://bit.ly/npia-py). 
 
 ## Unredacting the Mueller Report
 
