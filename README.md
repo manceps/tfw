@@ -9,7 +9,7 @@ Many of the techniques we use are explained in detail in [**N**atural **L**angua
 
 ## Unredacting the Mueller Report
 
-We'll show you how to train an RNN to predict the next words or sentences and use it to predict the text in the redactions (black boxes) of the Mueller Report. Then we'll show you how to use transfer learning in Keras with the state-of-the-art BERT language model to improve the accuracy of this unredaction pipeline.
+At the Portlan Python User Group, May 30, 2019, we'll show you use a simple RNN to predict the next words or sentences in any document. We'll then show how it's able to compose reasonable guesses for the text in the redactions (black boxes) of the Mueller Report. Then we'll show you how to use transfer learning in Keras with the state-of-the-art BERT language model to bring in information from outside the report text to improve the accuracy of the generated text, but only for short redactions.
 
 We built this on the shoulders of a lot of good people contributing code and data to a valiant effort to improve US government transparency:
 
@@ -24,6 +24,18 @@ We built this on the shoulders of a lot of good people contributing code and dat
 
 ## Learned Semantic Distance Metrics
 
+At Tensor Flow World 2019 we'll show the results of our investigation into the latest NL embeddings and their usefulness for search and abstractive summarization:
+
+- USE
+- BERT
+- GPT2
+
 ## Deep Learning Adversarial Attack and Defense
 
+At Tensor Flow World 2019 we'll show how to identify vulnerabilities in your machine learning brain from adversarial attacks:
+
+- Image classification
+- Document classification
+
 ## Abstractive Summarization of Long Technical Documents
+
