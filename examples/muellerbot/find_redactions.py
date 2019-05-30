@@ -27,6 +27,9 @@ REDACTION_MARKERS = set([
     '[Personal Privacy - Grand Jury]',
     '[Personal Privacy]',
     '[HOM]',
+    '[Investigative Technique]',
+    '[Investigative Technique]',
+    '[IT]'
 ])
 
 
