@@ -2,8 +2,8 @@
 
 At [TensorFlow.world 2019](https://conferences.oreilly.com/tensorflow/tf-ca), on Oct 28-31 Al Kari, Garrett Lander, and Hobson Lane from Manceps will be presenting our experience with NLP at scale for long technical documents, like medical records. We'll also show how to use that pipeline to unredact the Mueller Report at Portland Meetups May 29 & 30:
 
-- [Wed May 29 at Vacasa](http://bit.ly/tfnw-052919)
-- [Thurs May 30 at New Relic](https://www.meetup.com/pdxpython/events/gmxlbqyzhbfc)
+- Wed May 29 at Vacasa: [meetup](http://bit.ly/tfnw-052919) and [slides](https://github.com/manceps/tfw/tree/master/slides/)
+- Thurs May 30 at New Relic: [meetup](https://www.meetup.com/pdxpython/events/gmxlbqyzhbfc) and [slides](slides/)
 
 Many of the techniques we use are explained in detail in [**N**atural **L**anguage **P**rocessing **i**n **A**ction](http://bit.ly/npia-py). 
 
