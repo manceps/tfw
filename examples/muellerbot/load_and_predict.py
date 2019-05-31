@@ -252,7 +252,7 @@ def unredact_tokens(prefix_tokens=[], suffix_tokens=[], num_redactions=5):
     tokens = list(prefix_tokens) + [MASK_TOKEN] * num_redactions + list(suffix_tokens)
     tokens = tokens[:512]
     tokens_original = tokens.copy()
-    text = ' '.join(tokens)
+    # text = ' '.join(tokens)
     # print(f"Predicting {num_redactions} MASK tokens in: {' '.join(tokens)}")
 
     indices = np.asarray([[P.token_dict[token] for token in tokens] + [0] * (512 - len(tokens))])
@@ -282,7 +282,7 @@ def unredact_tokens(prefix_tokens=[], suffix_tokens=[], num_redactions=5):
     print()
     # if len(predictions) > 10:
     #     break
-    return (predictions_parameterized, text)
+    return (predictions_parameterized, tokens)
 
 
 def unredact_text(text, redactions=[2, 3]):
@@ -295,7 +295,7 @@ def unredact_text(text, redactions=[2, 3]):
     for r in redactions:
         tokens[r + 1] = MASK_TOKEN
 
-    print(f'Tokens: {tokens}')
+    # print(f'Tokens: {tokens}')
 
     indices = np.asarray([[P.token_dict[token] for token in tokens] + [0] * (512 - len(tokens))])
     segments = np.asarray([[0] * len(tokens) + [0] * (512 - len(tokens))])
@@ -311,7 +311,7 @@ def unredact_text(text, redactions=[2, 3]):
             [x for (j, x) in enumerate(predicts[0]) if j - 1 in redactions])
         )
     # predictions_hardcoded = list(map(lambda x: token_dict_rev[x], predicts[0][3:5]))
-    print(f'Predictions: {predictions_parameterized}')
+    print(f'Predictions: {" ".join(predictions_parameterized)}')
 
     # print(f'Hardcoded fill with: {predictions_hardcoded}')
     # list(map(lambda x: token_dict_rev[x], predicts[0][1:3]))
@@ -321,29 +321,6 @@ def unredact_text(text, redactions=[2, 3]):
     # if len(predictions) > 10:
     #     break
     return (predictions_parameterized, text)
-
-
-def unredact_interactively():
-    global P
-    if not P:
-        P = load_pipeline()
-    unredacted = ' '
-    while unredacted:
-        text = input('Text: ')
-        marker = input('Redaction marker: ')
-        marker = marker
-        redactions = find_repeated_substring(text, substring=marker)
-        if not redactions:
-            print('No redactions found')
-            unredacted = text
-            continue
-        print(redactions)
-        prefix, suffix = text[:redactions[0]], text[redactions[-1] + len(marker):]
-        prefix_tokens = P.tokenizer.tokenize(prefix)[:-1]
-        suffix_tokens = P.tokenizer.tokenize(suffix)[1:]
-        unredacted_tokens = unredact_tokens(prefix_tokens=prefix_tokens, suffix_tokens=suffix_tokens, num_redactions=len(redactions))
-        unredacted = ' '.join([t[2:] if t.startswith('##') else t for t in unredacted_tokens])
-        print(f'Unredacted text: {unredacted}')
 
 
 def unredact_examples(examples=TEXTS):
@@ -358,6 +335,44 @@ def unredact_examples(examples=TEXTS):
     for sentnum, text in enumerate(sentences):
         print(sentnum)
         predictions.append(unredact_text(text))
+
+
+def unredact_interactively():
+    global P
+    if not P:
+        P = load_pipeline()
+    unredacted = ' '
+    while unredacted:
+        text = input('Text: ')
+        marker = input('Redaction marker: ')
+        marker = marker or 'unk'
+        redactions = find_repeated_substring(text, substring=marker)
+        if not redactions:
+            print('No redactions found')
+            unredacted = text
+            continue
+        # print(redactions)
+        start, stop = redactions[0], redactions[-1] + len(marker)
+        prefix, suffix = text[:start], text[stop:]
+        # print(start, stop)
+        # print(f'prefix: {prefix}')
+        # print(f'suffix: {suffix}')
+        prefix_tokens = P.tokenizer.tokenize(prefix)[:-1]
+        suffix_tokens = P.tokenizer.tokenize(suffix)[1:]
+        # print(f'prefix_tokens: {prefix_tokens}')
+        # print(f'suffix_tokens: {suffix_tokens}')
+        unredacted_tokens, all_tokens = unredact_tokens(prefix_tokens=prefix_tokens, suffix_tokens=suffix_tokens, num_redactions=len(redactions))
+        print(f'all_tokens: {all_tokens}')
+        print(f'unredacted_tokens: {unredacted_tokens}')
+        j = 0
+        for (i, tok) in enumerate(all_tokens):
+            if tok == '[MASK]' and j < len(unredacted_tokens):
+                all_tokens[i] = unredacted_tokens[j]
+                j += 1
+
+        unredacted = ' '.join(all_tokens)
+        # unredacted = ' '.join([t[2:] if t.startswith('##') else t for t in unredacted_tokens])
+        print(f'Unredacted text: {unredacted}')
 
 
 if __name__ == '__main__':
