@@ -5,7 +5,7 @@ import re
 import numpy as np
 import pandas as pd
 from keras_bert import load_trained_model_from_checkpoint, Tokenizer
-from find_redactions import clean_dataframe, get_line_pairs
+from find_redactions import clean_dataframe, get_line_pairs, find_repeated_substring
 
 
 REDACTION_MARKERS = [
@@ -31,6 +31,9 @@ print(f'UNZIPPED_MODEL_PATH: {UNZIPPED_MODEL_PATH}')
 
 
 BERT_MODEL_CASED = 'uncased' not in UNZIPPED_MODEL_PATH.lower()
+
+global P
+P = None
 
 
 def get_unredacted_sentences(df='mueller-report-with-redactions-marked.csv',
@@ -203,29 +206,27 @@ def load_pipeline(UNZIPPED_MODEL_PATH=UNZIPPED_MODEL_PATH, cased=BERT_MODEL_CASE
     return NLPPipeline(model=model, token_dict=token_dict, token_dict_rev=token_dict_rev, tokenizer=tokenizer)
 
 
-if 'P' not in globals() and 'P' not in locals():
-    P = load_pipeline()
-
-
 def find_first_hom_tokens(df, text=None, substring='of documents and', marker='[Personal Privacy]'):
+    global P
+    P = P or load_pipeline()
     if not text:
         df = clean_dataframe(df) if isinstance(df, str) else df
         for t in df.text:
             if substring in t:
                 text = t
                 break
-    print(f'TEXT: {text}')
+    # print(f'TEXT: {text}')
     tokens = P.tokenizer.tokenize(text)
     joined_tokens = ' '.join(tokens)
-    print(f'joined_tokens: {joined_tokens}')
+    # print(f'joined_tokens: {joined_tokens}')
     hom = ' '.join(P.tokenizer.tokenize(marker)[1:-1])
-    print(f'joined_hom: {hom}')
+    # print(f'joined_hom: {hom}')
     hom_start = joined_tokens.find(hom)
     hom_stop = hom_start + len(hom)
-    print(f'hom_start: {hom_start}, hom_stop: {hom_stop}')
+    # print(f'hom_start: {hom_start}, hom_stop: {hom_stop}')
     prefix_tokens = joined_tokens[:hom_start].split()
     suffix_tokens = joined_tokens[hom_stop:].split()
-    print(f'HOM prefix_tokens: {prefix_tokens}\nHOM suffix_tokens: {suffix_tokens}')
+    # print(f'HOM prefix_tokens: {prefix_tokens}\nHOM suffix_tokens: {suffix_tokens}')
 
     return prefix_tokens, suffix_tokens
 
@@ -245,11 +246,14 @@ MASK_TOKEN = '[MASK]'
 
 
 def unredact_tokens(prefix_tokens=[], suffix_tokens=[], num_redactions=5):
+    global P
+    if not P:
+        P = load_pipeline()
     tokens = list(prefix_tokens) + [MASK_TOKEN] * num_redactions + list(suffix_tokens)
     tokens = tokens[:512]
     tokens_original = tokens.copy()
     text = ' '.join(tokens)
-    print(f"Prediction {num_redactions} MASK tokens in: {' '.join(tokens)}")
+    # print(f"Predicting {num_redactions} MASK tokens in: {' '.join(tokens)}")
 
     indices = np.asarray([[P.token_dict[token] for token in tokens] + [0] * (512 - len(tokens))])
     segments = np.asarray([[0] * len(tokens) + [0] * (512 - len(tokens))])
@@ -283,6 +287,8 @@ def unredact_tokens(prefix_tokens=[], suffix_tokens=[], num_redactions=5):
 
 def unredact_text(text, redactions=[2, 3]):
     print(f"Redacting tokens {redactions} in: {text}")
+    global P
+    P = P or load_pipeline()
 
     tokens = P.tokenizer.tokenize(text)
     tokens_original = tokens.copy()
@@ -317,17 +323,45 @@ def unredact_text(text, redactions=[2, 3]):
     return (predictions_parameterized, text)
 
 
-if __name__ == '__main__':
-    df = clean_dataframe()
-    for text, marker, page, num_redactions in TEXTS:
+def unredact_interactively():
+    global P
+    if not P:
+        P = load_pipeline()
+    unredacted = ' '
+    while unredacted:
+        text = input('Text: ')
+        marker = input('Redaction marker: ')
+        marker = marker
+        redactions = find_repeated_substring(text, substring=marker)
+        if not redactions:
+            print('No redactions found')
+            unredacted = text
+            continue
+        print(redactions)
+        prefix, suffix = text[:redactions[0]], text[redactions[-1] + len(marker):]
+        prefix_tokens = P.tokenizer.tokenize(prefix)[:-1]
+        suffix_tokens = P.tokenizer.tokenize(suffix)[1:]
+        unredacted_tokens = unredact_tokens(prefix_tokens=prefix_tokens, suffix_tokens=suffix_tokens, num_redactions=len(redactions))
+        unredacted = ' '.join([t[2:] if t.startswith('##') else t for t in unredacted_tokens])
+        print(f'Unredacted text: {unredacted}')
+
+
+def unredact_examples(examples=TEXTS):
+    for text, marker, page, num_redactions in examples:
+        print('\n\n****************************')
         prefix_tokens, suffix_tokens = find_first_hom_tokens(df=None, text=text, marker=marker)
-        print(f'*******\npage: {page}\nnum_words: {num_redactions}\nprefix_tokens: {prefix_tokens}\nsuffix_tokens: {suffix_tokens}')
+        print(f'page: {page}\nnum_words: {num_redactions}\nprefix_tokens: {prefix_tokens}\nsuffix_tokens: {suffix_tokens}')
         print(unredact_tokens(prefix_tokens=prefix_tokens, suffix_tokens=suffix_tokens, num_redactions=num_redactions))
+        print('\n\n****************************')
 
     predictions = []
     for sentnum, text in enumerate(sentences):
         print(sentnum)
         predictions.append(unredact_text(text))
+
+
+if __name__ == '__main__':
+    unredact_interactively()
 
 # sentence_1 = text
 # sentence_2 = 'Joseph Conrad said "We live as we dream, alone." '

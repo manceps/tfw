@@ -29,8 +29,11 @@ REDACTION_MARKERS = set([
     '[HOM]',
     '[Investigative Technique]',
     '[Investigative Technique]',
-    '[IT]'
+    '[IT]',
+    'unk'
 ])
+
+MARKER = 'unk'
 
 
 def guess_redaction_markers():
@@ -85,15 +88,55 @@ def find_text(df='mueller-report-with-redactions-marked.csv', substring='of docu
         if substring in t:
             text = t
             break
-    print(f'TEXT: {text}')
+    # print(f'TEXT: {text}')
     marker_start = text.find(marker)
     marker_stop = marker_start + len(marker)
-    print(f'marker_start: {marker_start}, marker_stop: {marker_stop}')
+    # print(f'marker_start: {marker_start}, marker_stop: {marker_stop}')
     prefix = text[:marker_start]
     suffix = text[marker_stop:]
-    print(f'HOM prefix: {prefix}\nHOM suffix: {suffix}')
+    # print(f'HOM prefix: {prefix}\nHOM suffix: {suffix}')
 
     return prefix, suffix
+
+
+def find_repeated_substring(text, substring=MARKER, max_occurences=32):
+    """ Find contiguous redaction markers and return the start locations
+
+    >>> text = 'Mueller said "MASK MASK MASK", then walked away.'
+    >>> find_repeated_substring(text, 'MASK')
+    [14, 19, 24]
+    >>> find_repeated_substring('unkunkunk')
+    [0, 3, 6]
+    >>> find_repeated_substring(' unkunkunk')
+    [1, 4, 7]
+    >>> find_repeated_substring(' unkunkunk ')
+    [1, 4, 7]
+    >>> find_repeated_substring('unredact unk if you can.')  # FIXME: shoudl be [1, 4, 8]?
+    [9]
+    >>> find_repeated_substring(' unkunk unk ')  # FIXME: shoudl be [1, 4, 8]?
+    [1, 4, 8]
+    """
+    # print(f'TEXT: {text}')
+    substring = substring or MARKER
+    start = text.find(substring)
+    stop = start + len(substring)
+    starts = []
+    for i in range(max_occurences):
+        if not (start > -1 and stop <= len(text) - len(substring) + 1):
+            break
+        # print(start, stop)
+        if len(starts):
+            stop = starts[-1] + len(substring)
+            starts.append(stop + start)
+        else:
+            starts = [start]
+        # print(start, stop)
+        start = text[stop:].find(substring)
+        if start < 0 and len(starts) > 1:
+            return starts[:-1]
+        # print(start, stop)
+        # print(starts)
+    return starts
 
 
 def main():
