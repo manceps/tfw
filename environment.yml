@@ -3,7 +3,12 @@ channels:
   - defaults
 dependencies:
   - jupyter
-  - keras-gpu
-  - python=3.6
-  - tensorflow-gpu
-
+  - keras
+  - spacy
+  - opencv
+  - pandas
+  - pillow
+  - python==3.6
+  - tensorflow
+  - pip:
+    - -r requirements.txt

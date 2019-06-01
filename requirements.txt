@@ -12,16 +12,18 @@
 # pip install -r requirements.txt
 # Remember to also add them in setup.cfg but unpinned.
 # pydrive is equivalent of google.colab.drive
-cython
+# cython
 django
 django_extensions
-google-cloud-vision
+# google-cloud-vision
 jupyter
+keras
 -e git+https://github.com/totalgood/keras-bert.git@master#egg=keras_bert
 nltk
-numpy
 opencv-python
+pandas
 pillow
-PyMuPDF==1.14.13
-pydrive
-python-chatbot
+tensorflow
+# PyMuPDF==1.14.13
+# pydrive
+# python-chatbot

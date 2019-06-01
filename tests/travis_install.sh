@@ -30,34 +30,22 @@ if [[ "$DISTRIB" == "conda" ]]; then
         chmod +x miniconda.sh && ./miniconda.sh -b -p $HOME/miniconda
     fi
     export PATH=$HOME/miniconda/bin:$PATH
+    echo "export PATH=$HOME/miniconda/bin:$PATH" >> ~/.bashrc
     # Make sure to use the most updated version
     conda update --yes conda
 
     # Configure the conda environment and put it in the path using the
     # provided versions
     # (prefer local venv, since the miniconda folder is cached)
-    conda create -p ./.venv --yes python=${PYTHON_VERSION} pip
-    source activate ./.venv
+    conda create --name tfw --file environment.yml --yes
+    # conda create -p ./.venv --yes python=${PYTHON_VERSION} pip
+    conda activate tfw
 fi
 
 if [[ "$COVERAGE" == "true" ]]; then
     pip install coverage coveralls
 fi
-
-    function transpose(a) {
-        return Object.keys(a[0]).map(function(c) {
-            return a.map(function(r) { return r[c]; });
-        });
-    }
-
-    console.log(transpose([
-        [1,2,3],
-        [4,5,6],
-        [7,8,9]
-    ]));
 ​​
-
-
 
 
 travis-cleanup() {
