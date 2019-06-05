@@ -1,8 +1,7 @@
 # Manceps Talks
 
-- Wed May 29 at Vacasa: [meetup](http://bit.ly/tfnw-052919) and [slides](https://github.com/manceps/tfw/tree/master/slides/)
-- Thurs May 30 at New Relic: [meetup](https://www.meetup.com/pdxpython/events/gmxlbqyzhbfc) and [slides](slides/)
-- Tensorflow World 2019
+- Wed May 29 at Vacasa: [video](https://youtu.be/ORRHMl3syDM), [code](examples/muellerbot), [slides](https://github.com/manceps/tfw/tree/master/slides/), [meetup](http://bit.ly/tfnw-052919)
+- Thurs May 30 at New Relic: [video](https://youtu.be/VmoBS9AhZIc), [code](examples/muellerbot), [slides](https://github.com/manceps/tfw/tree/master/slides/), [meetup](https://www.meetup.com/pdxpython/events/gmxlbqyzhbfc)
 
 ## Portland User Groups, May 29-30, 2019
 
