@@ -4,7 +4,7 @@
 - Thurs May 30 at New Relic: [meetup](https://www.meetup.com/pdxpython/events/gmxlbqyzhbfc) and [slides](slides/)
 - Tensorflow World 2019
 
-## Portland Python User Group, May 29-30 2019
+## Portland User Groups, May 29-30, 2019
 
 We'll show you how to use a state of pipeline to unredact (inaccurately) the Mueller Report at Portland Meetups May 29 & 30:
 
