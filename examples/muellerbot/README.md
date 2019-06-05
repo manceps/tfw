@@ -7,7 +7,7 @@ Unredacts the mueller report (inaccurately) using BERT.
 ```bash
 git clone https://github.com/manceps/tfw
 cd tfw
-conda create --name tfw --file environment.yml --yes
+conda env create --name tfw --file environment.yml
 conda activate tfw
 pip install -e .
 cd examples/muellerbot
