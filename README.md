@@ -1,19 +1,16 @@
 # Manceps Talks
 
-- Wed May 29 at Vacasa: [meetup](http://bit.ly/tfnw-052919) and [slides](https://github.com/manceps/tfw/tree/master/slides/)
-- Thurs May 30 at New Relic: [meetup](https://www.meetup.com/pdxpython/events/gmxlbqyzhbfc) and [slides](slides/)
-- Tensorflow World 2019
+- Wed May 29 at Vacasa: [video](https://youtu.be/ORRHMl3syDM), [code](examples/muellerbot), [slides](https://github.com/manceps/tfw/tree/master/slides/), [meetup](http://bit.ly/tfnw-052919)
+- Thurs May 30 at New Relic: [video](https://youtu.be/VmoBS9AhZIc), [code](examples/muellerbot), [slides](https://github.com/manceps/tfw/tree/master/slides/), [meetup](https://www.meetup.com/pdxpython/events/gmxlbqyzhbfc)
 
-## Portland Python User Group, May 30 2019
+## Portland User Groups, May 29-30, 2019
 
-We'll show you how to use a state of pipeline to unredact the Mueller Report at Portland Meetups May 29 & 30:
+We'll show you how to use a state of pipeline to unredact (inaccurately) the Mueller Report at Portland Meetups May 29 & 30:
 
 - Wed May 29 at Vacasa: [meetup](http://bit.ly/tfnw-052919) and [slides](https://github.com/manceps/tfw/tree/master/slides/)
 - Thurs May 30 at New Relic: [meetup](https://www.meetup.com/pdxpython/events/gmxlbqyzhbfc) and [slides](slides/)
 
 Many of the techniques we use are explained in detail in [**N**atural **L**anguage **P**rocessing **i**n **A**ction](http://bit.ly/npia-py). 
-
-## Portland Python User Group, May 30 2019
 
 ### Unredacting the Mueller Report
 

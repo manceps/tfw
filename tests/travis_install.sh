@@ -9,13 +9,17 @@
 # THIS SCRIPT IS SUPPOSED TO BE AN EXAMPLE. MODIFY IT ACCORDING TO YOUR NEEDS!
 
 set -e
+if [ -n "$DISTRIB" ] ; then
+    export DISTRIB="conda"
+    export PYTHON_VERSION=3.6
+fi
 
 if [[ "$DISTRIB" == "conda" ]]; then
     # Deactivate the travis-provided virtual environment and setup a
     # conda-based environment instead
     deactivate || echo "Unable to deactivate travis conda env"
 
-    if [[ -f "$HOME/miniconda/bin/conda" ]]; then
+    if [[ -f "$HOME/miniconda/bin/conda" ]] && [[ -f `which conda` ]] ; then
         echo "Skip install conda [cached]"
     else
         # By default, travis caching mechanism creates an empty dir in the
@@ -25,22 +29,22 @@ if [[ "$DISTRIB" == "conda" ]]; then
 
         # Use the miniconda installer for faster download / install of conda
         # itself
-        wget -c http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-            -O miniconda.sh
+        wget -c http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
         chmod +x miniconda.sh
         ./miniconda.sh -b -p $HOME/miniconda
+
+        export PATH="$HOME/miniconda/bin:$PATH"
+        echo "export PATH=\"$HOME/miniconda/bin:$PATH\"" >> ~/.bashrc
     fi
-    export PATH=$HOME/miniconda/bin:$PATH
-    echo "export PATH=$HOME/miniconda/bin:$PATH" >> ~/.bashrc
     # Make sure to use the most updated version
-    conda update --yes conda
+    conda update --yes conda pip
 
     # Configure the conda environment and put it in the path using the
     # provided versions
     # (prefer local venv, since the miniconda folder is cached)
-    conda env create --name tfw --file environment.yml
+    conda env create --name tfw --file environment.yml || echo "conda env `tfw` already exists"
     # conda create -p ./.venv --yes python=${PYTHON_VERSION} pip
-    conda activate tfw
+    source activate tfw
 fi
 
 if [[ "$COVERAGE" == "true" ]]; then
