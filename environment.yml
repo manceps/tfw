@@ -1,6 +1,5 @@
-name: tfw
-channels:
-  - defaults
+name: tfw-env
+
 dependencies:
   - jupyter
   - keras
@@ -8,7 +7,7 @@ dependencies:
   - opencv
   - pandas
   - pillow
-  - python==3.6
+  - python>=3.6
   - tensorflow
   - pip:
     - -r requirements.txt

@@ -25,9 +25,10 @@ if [[ "$DISTRIB" == "conda" ]]; then
 
         # Use the miniconda installer for faster download / install of conda
         # itself
-        wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+        wget -c http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
             -O miniconda.sh
-        chmod +x miniconda.sh && ./miniconda.sh -b -p $HOME/miniconda
+        chmod +x miniconda.sh
+        ./miniconda.sh -b -p $HOME/miniconda
     fi
     export PATH=$HOME/miniconda/bin:$PATH
     echo "export PATH=$HOME/miniconda/bin:$PATH" >> ~/.bashrc
@@ -37,7 +38,7 @@ if [[ "$DISTRIB" == "conda" ]]; then
     # Configure the conda environment and put it in the path using the
     # provided versions
     # (prefer local venv, since the miniconda folder is cached)
-    conda create --name tfw --file environment.yml --yes
+    conda env create --name tfw --file environment.yml
     # conda create -p ./.venv --yes python=${PYTHON_VERSION} pip
     conda activate tfw
 fi
