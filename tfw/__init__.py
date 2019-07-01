@@ -5,7 +5,7 @@ import glob
 
 try:
     from .constants import SRC_DIR
-except: # noqa
+except:  # noqa
     SRC_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -31,6 +31,6 @@ __all__ = [os.path.basename(f)[:-3] for f in modules if not f.endswith('__init__
 
 print(__all__)
 
-from . import *  # noqa
+from tfw import *  # noqa
 del os, glob
 del SRC_DIR, modules
