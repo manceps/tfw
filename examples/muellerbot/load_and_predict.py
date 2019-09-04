@@ -7,6 +7,7 @@ import pandas as pd
 from keras_bert import load_trained_model_from_checkpoint, Tokenizer
 from find_redactions import clean_dataframe, get_line_pairs, find_repeated_substring
 
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data')
 
 REDACTION_MARKERS = [
     '[Harm to Ongoing Matter - Grand Jury]',
@@ -20,7 +21,8 @@ REDACTION_MARKERS = [
 REDACTION_MARKER = REDACTION_MARKERS[2]
 REDACTION_BERT_TOKEN = '[MASK]'
 
-UNZIPPED_MODEL_PATH = '~/midata/public/models/bert/uncased_L-12_H-768_A-12'
+UNZIPPED_MODEL_PATH = os.path.join(DATA_DIR, 'uncased_L-12_H-768_A-12')
+
 if len(sys.argv) == 2:
     UNZIPPED_MODEL_PATH = sys.argv[1]
 
